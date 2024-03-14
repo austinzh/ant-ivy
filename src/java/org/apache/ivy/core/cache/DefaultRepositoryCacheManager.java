@@ -1152,9 +1152,11 @@ public class DefaultRepositoryCacheManager implements RepositoryCacheManager, Iv
 
                         // actual download
                         assertInsideCache(archiveFile);
-                        if (archiveFile.exists()) {
-                            archiveFile.delete();
+                        if (archiveFile.exists()) { //what happen if are using this file
+                            archiveFile.delete(); // if we can get any kind of timestamp or hash we should check instead of delete and download angain
                         }
+                        // we should touch a .lock file here to pervent other ivy instance(process) to download
+                        // if lock file exist we should block and comeback to check if archiveFile exist or not.
                         File part = new File(archiveFile.getAbsolutePath() + ".part");
                         repository.get(resource.getName(), part);
                         if (!part.renameTo(archiveFile)) {
